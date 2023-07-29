@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { SafeAreaView, View, Text, TextInput, ScrollView, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { Rating } from 'react-native-ratings'; // Make sure to install react-native-ratings
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
 
 const screenWidth = Dimensions.get('window').width;
 const sliderWidth = screenWidth * 0.91;
@@ -32,6 +35,7 @@ const HomesRoute = () => {
         landlord: 'Landlord Name',
         lease: '12 months',
         cost: 'R1000/month',
+        rating: 4.5 // Add the rating here
     });
 
     const handleSnapToItem = (index, homeIndex) => {
@@ -88,19 +92,25 @@ const HomesRoute = () => {
                         <View style={styles.carouselContainer}>
                             <Carousel
                                 data={home.imageUrls}
-                                renderItem={({ item }) => <Image style={styles.homeImage} source={{ uri: item }} />}
+                                renderItem={({ item }) => (
+                                    <>
+                                        <Image style={styles.homeImage} source={{ uri: item }} />
+                                        <TouchableOpacity onPress={() => toggleLikeHome(homeIndex)} activeOpacity={1}>
+                                            <View style={styles.likeIconBackground}>
+                                                <MaterialCommunityIcons 
+                                                    name={likedHomes[homeIndex] ? "heart" : "heart-outline"} 
+                                                    size={24} 
+                                                    color={likedHomes[homeIndex] ? "#FF4081" : "black"} 
+                                                    style={styles.likeIcon}
+                                                />
+                                            </View>
+                                        </TouchableOpacity>
+                                    </>
+                                )}
                                 sliderWidth={sliderWidth}
                                 itemWidth={sliderWidth}
                                 onSnapToItem={(index) => handleSnapToItem(index, homeIndex)}
                             />
-                            <TouchableOpacity onPress={() => toggleLikeHome(homeIndex)} activeOpacity={1}>
-                                <MaterialCommunityIcons 
-                                    name={likedHomes[homeIndex] ? "heart" : "heart-outline"} 
-                                    size={24} 
-                                    color={likedHomes[homeIndex] ? "#FF4081" : "black"} 
-                                    style={styles.likeIcon}
-                                />
-                            </TouchableOpacity>
                             <Pagination
                                 dotsLength={home.imageUrls.length}
                                 activeDotIndex={activeSlide[homeIndex]}
@@ -109,21 +119,35 @@ const HomesRoute = () => {
                                     width: 6,
                                     height: 6,
                                     borderRadius: 3,
-                                    marginHorizontal: 4,
+                                    marginHorizontal: 0, // Reduced this from 4 to 1
                                     backgroundColor: 'rgba(255, 255, 255, 0.92)'
                                 }}
                                 inactiveDotOpacity={0.4}
                                 inactiveDotScale={0.6}
                             />
                         </View>
-                        <Text style={styles.homeName}>{home.name}</Text>
-                        <Text style={styles.homeDetails}>Landlord: {home.landlord}</Text>
-                        <Text style={styles.homeDetails}>Lease: {home.lease}</Text>
-                        <Text style={styles.homeDetails}>Cost: {home.cost}</Text>
+                        <View style={styles.textContainer}>
+                            <View>
+                                <Text style={styles.homeName}>{home.name}</Text>
+                                <Text style={styles.homeDetails}>Landlord: {home.landlord}</Text>
+                                <Text style={styles.homeDetails}>Lease: {home.lease}</Text>
+                                <Text style={styles.homeCost}>Cost: {home.cost}</Text>
+                            </View>
+                            <Rating
+                                type='star'
+                                imageSize={20}
+                                readonly
+                                startingValue={home.rating} // Use the rating from your data
+                                style={styles.rating}
+                                tintColor="#FFFFFF" // This should match your background color
+                                ratingColor="#FF4081"
+                            />
+                        </View>
                     </View>
                 ))}
             </ScrollView>
         </SafeAreaView>
+
     );
 };
 
@@ -221,6 +245,12 @@ const styles = StyleSheet.create({
         zIndex: 1,
     },
 
+    likeIconBackground: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 20,
+        padding: 2,
+    },
+
     paginationContainer: {
         position: 'absolute',
         bottom: 0,
@@ -237,6 +267,13 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
 
+    textContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+    },
+
     homeName: {
         fontWeight: 'bold',
         fontSize: 18,
@@ -244,7 +281,57 @@ const styles = StyleSheet.create({
 
     homeDetails: {
         fontSize: 16,
+        color: '#777', // Lighter gray
+    },
+
+    homeCost: {
+        fontSize: 16,
+        textDecorationLine: 'underline',
+        fontWeight: 'bold',
+    },
+
+    rating: {
+        alignSelf: 'flex-start',
     },
 });
 
-export default HomesRoute;
+const Tab = createBottomTabNavigator();
+
+function MyTabs() {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === 'Explore') {
+            iconName = focused ? 'home-city' : 'home-city-outline';
+          } else if (route.name === 'Wishlists') {
+            iconName = focused ? 'heart' : 'heart-outline';
+          } else if (route.name === 'Applications') {
+            iconName = focused ? 'application' : 'application-outline';
+          } else if (route.name === 'Inbox') {
+            iconName = focused ? 'email' : 'email-outline';
+          } else if (route.name === 'Profile') {
+            iconName = focused ? 'account' : 'account-outline';
+          }
+
+          // You can return any component that you like here!
+          return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
+        },
+      })}
+      tabBarOptions={{
+        activeTintColor: '#FF4081',
+        inactiveTintColor: 'gray',
+      }}
+    >
+      <Tab.Screen name="Explore" component={HomesRoute} />
+      <Tab.Screen name="Wishlists" component={HomesRoute} />
+      <Tab.Screen name="Applications" component={HomesRoute} />
+      <Tab.Screen name="Inbox" component={HomesRoute} />
+      <Tab.Screen name="Profile" component={HomesRoute} />
+    </Tab.Navigator>
+  );
+}
+
+export default MyTabs

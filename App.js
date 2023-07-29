@@ -4,16 +4,16 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SignUpScreen from './components/signup/signupscreen';
 import HomeScreen from './components/home/home'; 
 
+import MyTabs from './components/home/home';
+
 const Stack = createStackNavigator();
 
-function App() {
+export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="SignUp">
-        <Stack.Screen name="SignUp" component={HomeScreen} options={{ headerShown: false }} />
-      </Stack.Navigator>
+      <MyTabs />
     </NavigationContainer>
   );
 }
 
-export default App;
+
