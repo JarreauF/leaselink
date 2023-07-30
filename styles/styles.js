@@ -93,17 +93,24 @@ const styles = StyleSheet.create({
     },
 
     likeIcon: {
-        position: 'absolute',
-        top: 10,
-        right: 10,
-        zIndex: 1,
+        
+     
     },
 
     likeIconBackground: {
-        backgroundColor: '#FFFFFF',
+        position: 'absolute',
+        top: 15,
+        right: 15,
+        zIndex: 1,
+        
         borderRadius: 20,
         padding: 2,
     },
+
+    likeIconInside: {
+        position: 'absolute',
+    
+      },       
 
     paginationContainer: {
         position: 'absolute',
@@ -124,9 +131,12 @@ const styles = StyleSheet.create({
     textContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%',
+        alignItems: 'flex-start', // Align items to the start of the container
+        marginTop: 5,
+        marginBottom: 10, // Add some bottom margin
     },
+    
+    
 
     homeName: {
         fontWeight: 'bold',
@@ -143,10 +153,25 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
         fontWeight: 'bold',
     },
-
     rating: {
-        alignSelf: 'flex-start',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
     },
+    ratingText: {
+        fontSize: 16,
+        marginLeft: 5,
+        // other styles as needed
+    },
+    
+    detailsContainer: {
+        flex: 1,
+    },
+    ratingContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    
 });
 
 export default styles;

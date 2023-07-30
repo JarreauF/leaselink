@@ -10,7 +10,7 @@ const homesData = new Array(10).fill({
     landlord: 'Landlord Name',
     lease: '12 months',
     cost: 'R1000/month',
-    rating: 4.5 // Add the rating here
+    rating: 4.3 // Add the rating here
   });
   
   export default homesData;
