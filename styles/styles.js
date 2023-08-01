@@ -111,6 +111,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
     
       },       
+    
+      
 
     paginationContainer: {
         position: 'absolute',

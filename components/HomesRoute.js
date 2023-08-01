@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  StyleSheet
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Carousel, { Pagination } from "react-native-snap-carousel";
@@ -17,13 +18,13 @@ import categories from "../data/categoriesData";
 import homes from "../data/homesData";
 import styles from "../styles/styles";
 import { sliderWidth } from "../constants/dimensions";
-import { useNavigation } from "@react-navigation/native"; // Import useNavigation
+import { useNavigation } from "@react-navigation/native";
 
 const HomesRoute = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [activeSlide, setActiveSlide] = useState(new Array(10).fill(0));
   const [likedHomes, setLikedHomes] = useState(new Array(10).fill(false));
-  const navigation = useNavigation(); // Initialize useNavigation
+  const navigation = useNavigation();
 
   const handleSnapToItem = (index, homeIndex) => {
     const newActiveSlide = [...activeSlide];
@@ -38,7 +39,7 @@ const HomesRoute = () => {
   };
 
   const openHomeDetails = (home) => {
-    navigation.navigate("HomeDetails", { home }); // Navigate to HomeDetails screen with home object
+    navigation.navigate("HomeDetails", { home });
   };
 
   return (
@@ -96,35 +97,20 @@ const HomesRoute = () => {
                 renderItem={({ item }) => (
                   <>
                     <TouchableOpacity
-                      onPress={() => openHomeDetails(home)} // Call the function to navigate to HomeDetails
+                      onPress={() => openHomeDetails(home)}
                     >
                       <Image style={styles.homeImage} source={{ uri: item }} />
                     </TouchableOpacity>
                     <TouchableOpacity
                       onPress={() => toggleLikeHome(homeIndex)}
-                      style={styles.likeIconBackground}
+                      style={[styles.likeIconBackground, likedHomes[homeIndex] ? styles.whiteBorder : {}]}
                     >
                       <MaterialCommunityIcons
-                        name="heart-outline"
+                        name={likedHomes[homeIndex] ? "heart" : "heart-outline"}
                         size={24}
-                        color="white"
+                        color={likedHomes[homeIndex] ? "#FF4081" : "white"}
                         style={styles.likeIcon}
                       />
-                      {likedHomes[homeIndex] ? (
-                        <MaterialCommunityIcons
-                          name="heart"
-                          size={20}
-                          color="#FF4081"
-                          style={styles.likeIconInside}
-                        />
-                      ) : (
-                        <MaterialCommunityIcons
-                          name="heart"
-                          size={20}
-                          color="#808080"
-                          style={styles.likeIconInside}
-                        />
-                      )}
                     </TouchableOpacity>
                   </>
                 )}

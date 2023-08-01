@@ -9,7 +9,7 @@ function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen name="HomesRoute" component={HomesRoute} />
-      <HomeStack.Screen name="HomeDetails" component={HomeDetails} />
+      <HomeStack.Screen name="HomeDetails" component={HomeDetails} options={{headerShown: false, tabBarVisible: false }} />
     </HomeStack.Navigator>
   );
 }
