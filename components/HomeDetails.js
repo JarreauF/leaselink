@@ -4,6 +4,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MapView, { Marker } from 'react-native-maps';
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
@@ -53,9 +54,9 @@ const HomeDetails = () => {
           <View style={styles.sectionContainer}>
             <View style={styles.homeTypeInfo}>
               <Text style={styles.homeType}>{`${home.type} • Rented by `}</Text>
-              <Text style={styles.landlordName}>{home.landlord.name}</Text>
+              <Text style={styles.landlordName}>{home.name}</Text>
             </View>
-            <Image source={{ uri: home.landlord.profileImage }} style={styles.profileImage} />
+            <Image source={{ uri: home.profileImage }} style={styles.profileImage} />
             <Text style={styles.features}>{`${home.tenants} Tenants • ${home.bedrooms} Bedrooms • ${home.beds} Beds • ${home.bathrooms} Bathrooms`}</Text>
           </View>
           <View style={styles.separator} />
@@ -79,6 +80,24 @@ const HomeDetails = () => {
             <TouchableOpacity onPress={() => setModalVisible(true)}>
               <Text style={styles.showMore}>Show more <Icon name="chevron-forward-outline" size={20} color="#333" /></Text>
             </TouchableOpacity>
+          </View>
+          <View style={styles.mapContainer}>
+            <MapView 
+              style={styles.map}
+              initialRegion={{
+                latitude: home.latitude,
+                longitude: home.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+            >
+              <Marker
+                coordinate={{
+                  latitude: home.latitude,
+                  longitude: home.longitude
+                }}
+              />
+            </MapView>
           </View>
         </View>
       </ScrollView>
@@ -107,8 +126,6 @@ const HomeDetails = () => {
     </View>
   );
 }
-
-
 
 const styles = StyleSheet.create({
     container: {
@@ -304,6 +321,17 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
       }, 
+
+      mapContainer: {
+        height: 300,
+        width: '100%',
+        borderRadius: 5,
+        overflow: 'hidden',
+        marginVertical: 10,
+      },
+      map: {
+        flex: 1,
+      },
 });
 
 export default HomeDetails;

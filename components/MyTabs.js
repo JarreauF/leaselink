@@ -1,4 +1,5 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React from 'react';
+import { createBottomTabNavigator, BottomTabBar } from '@react-navigation/bottom-tabs';
 import HomeStackScreen from './HomeStack';
 import WishlistsRoute from './WishlistsRoute';
 import ApplicationsRoute from './ApplicationsRoute';
@@ -8,6 +9,17 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
+function getActiveRouteName(route) {
+  const routeName = route.state
+    ? // Get the currently active route name in the nested navigator
+      route.state.routes[route.state.index].name
+    : // If state doesn't exist, we need to default to `screen` param if available, or the initial screen
+      // In our case, it's "Home" as that's the first screen inside the navigator
+      route.params?.screen || 'Explore';
+
+  return routeName;
+}
+
 function MyTabs() {
   return (
     <Tab.Navigator
@@ -15,7 +27,7 @@ function MyTabs() {
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          
+
           if (route.name === 'Explore') {
             iconName = focused ? 'home-city' : 'home-city-outline';
           } else if (route.name === 'Wishlists') {
@@ -34,6 +46,11 @@ function MyTabs() {
       tabBarOptions={{
         activeTintColor: '#FF4081',
         inactiveTintColor: 'gray',
+      }}
+      tabBar={props => {
+        const routeName = getActiveRouteName(props.state.routes[props.state.index]);
+        if (routeName === 'HomeDetails') return null;
+        return <BottomTabBar {...props} />;
       }}
     >
       <Tab.Screen name="Explore" component={HomeStackScreen} />

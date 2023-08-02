@@ -136,7 +136,7 @@ const HomesRoute = () => {
             </View>
             <View style={styles.textContainer}>
               <View style={styles.detailsContainer}>
-                <Text style={styles.homeName}>{home.name}</Text>
+                <Text style={styles.name}>{home.name}</Text>
                 <Text style={styles.homeDetails}>
                   Landlord: {home.landlord}
                 </Text>
